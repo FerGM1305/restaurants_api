@@ -28,7 +28,8 @@ def create_restaurant():
     """
     Crea un nuevo restaurante
 
-    Esta función devuelve una lista de un restaurante especifico cuyo ID fue dado en los parametros.
+    Esta función crea un nuevo restaurante, los datos se pasan en el body.
+    Error 500 si no se agrega un rating valido o url valida
     """
     data = request.json
     new_restaurant = Restaurant(**data)
@@ -38,6 +39,12 @@ def create_restaurant():
 
 @app.route('/restaurants/<id>', methods=['PUT'])
 def update_restaurant(id):
+    """
+    Actualiza un restaurante existente
+
+    Esta función actualiza el restaurante existente que se indique en el request con el id
+    Error 500 si no se agrega un rating valido o url valida
+    """
     restaurant = Restaurant.query.get_or_404(id)
     data = request.json
     for key, value in data.items():
@@ -47,6 +54,11 @@ def update_restaurant(id):
 
 @app.route('/restaurants/<id>', methods=['DELETE'])
 def delete_restaurant(id):
+    """
+    Elimina un restaurante existente
+
+    Esta función elimina el restaurante que se indique en el request con el id
+    """
     restaurant = Restaurant.query.get_or_404(id)
     db.session.delete(restaurant)
     db.session.commit()
@@ -57,7 +69,13 @@ def delete_restaurant(id):
 
 @app.route('/restaurants/statistics', methods=['GET'])
 def get_statistics():
+    """
+    Obtiene estadisticas de los restaurantes
 
+    Esta función obtiene el AVG, Standard Deviation y el Count
+    de los restaurantes de que esten dentro de un radio dado en metros
+    el punto central es dado por longitud y latitud
+    """
     latitude = float(request.args.get('latitude'))
     longitude = float(request.args.get('longitude'))
     radius = float(request.args.get('radius'))
